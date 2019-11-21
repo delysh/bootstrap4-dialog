@@ -29,7 +29,7 @@
         root.BootstrapDialog = factory(root.jQuery);
     }
 
-}(this, function ($) {
+}(this ? this : window, function ($) {
 
     "use strict";
 
@@ -412,6 +412,8 @@
             return this;
         },
         initModalStuff: function () {
+
+
             this.setModal(this.createModal())
                 .setModalDialog(this.createModalDialog())
                 .setModalContent(this.createModalContent())
@@ -425,6 +427,8 @@
                 .append(this.getModalHeader())
                 .append(this.getModalBody())
                 .append(this.getModalFooter());
+
+
 
             return this;
         },
@@ -765,7 +769,7 @@
                 if (this.getButtons().length === 0) {
                     this.getModalFooter().hide();
                 } else {
-                    this.getModalFooter().show().find('.' + this.getNamespace('footer')).html('').append(this.createFooterButtons());
+                    this.getModalFooter().show().closest('.modal-footer').append(this.createFooterButtons());
                 }
             }
 
@@ -814,7 +818,7 @@
             $container.append(this.createTitleContent());
 
             // Close button
-            $container.prepend(this.createCloseButton());
+            $container.append(this.createCloseButton());
 
             return $container;
         },
@@ -859,8 +863,11 @@
         },
         createFooterButtons: function () {
             var that = this;
-            var $container = $('<div></div>');
-            $container.addClass(this.getNamespace('footer-buttons'));
+
+            var $container = that.$modalFooter;// $('<div></div>');
+            //$container.addClass(this.getNamespace('footer-buttons'));
+
+
             this.indexedButtons = {};
             $.each(this.options.buttons, function (index, button) {
                 if (!button.id) {
@@ -897,7 +904,7 @@
             if (typeof button.cssClass !== 'undefined' && $.trim(button.cssClass) !== '') {
                 $button.addClass(button.cssClass);
             } else {
-                $button.addClass('btn-default');
+                $button.addClass('btn-secondary');
             }
 
             // Data attributes
@@ -932,6 +939,8 @@
             if (typeof button.enabled !== 'undefined') {
                 $button.toggleEnable(button.enabled);
             }
+
+            $button.addClass("bootstrap4-dialog-button");
 
             return $button;
         },
@@ -1195,7 +1204,7 @@
             if (this.getDescription()) {
                 this.getModal().attr('aria-describedby', this.getDescription());
             }
-            this.getModalFooter().append(this.createFooterContent());
+            //this.getModalFooter().append(this.createFooterContent());
             this.getModalHeader().append(this.createHeaderContent());
             this.getModalBody().append(this.createBodyContent());
             this.getModal().data('bs.modal', new BootstrapDialogModal(this.getModalForBootstrapDialogModal(), { //FIXME for BootstrapV4
